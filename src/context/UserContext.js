@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
+import { baseURL } from "../config";
 
 const UserContext = createContext();
 
@@ -17,16 +18,16 @@ const UserProvider = ({ children }) => {
   useEffect(() => {
     if (!user && currentUser) {
       const getUser = async () => {
-        const res = await axios.get(`/auth/isLogedIn`);
+        const res = await axios.get(`${baseURL}/auth/isLogedIn`);
         res && setUser(currentUser);
-      }
+      };
       getUser();
     }
   }, []);
 
   useEffect(() => {
     localStorage.setItem("user", JSON.stringify(user));
-  },[user])
+  }, [user]);
 
   const login = (user) => {
     setUser(user);
@@ -45,9 +46,7 @@ const UserProvider = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider
-      value={{ login, logout, user, loading, setLoading, logError, setUser }}
-    >
+    <UserContext.Provider value={{ login, logout, user, loading, setLoading, logError, setUser }}>
       {children}
     </UserContext.Provider>
   );

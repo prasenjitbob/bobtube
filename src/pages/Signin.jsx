@@ -6,15 +6,11 @@ import { useUser } from "../context/UserContext";
 import { auth, provider } from "../firebase";
 import { signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
-import "./../styles/signin.css"
+import "./../styles/signin.css";
+import { baseURL } from "../config";
 
 const Container = styled.div`
   display: flex;
@@ -100,7 +96,7 @@ const Signin = () => {
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const res = await axios.post("/auth/signin", { name, password });
+      const res = await axios.post(`${baseURL}/auth/signin`, { name, password });
       login(res.data);
       setLoading(false);
       navigate("/");
@@ -112,14 +108,14 @@ const Signin = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    await axios.post(`/auth/signup`, {
+    await axios.post(`${baseURL}/auth/signup`, {
       email,
       name,
       password,
-      img: imageUrl
+      img: imageUrl,
     });
-    toast.success("Sign up successfull")
-    setTimeout(() => window.location.reload(), 3000) 
+    toast.success("Sign up successfull");
+    setTimeout(() => window.location.reload(), 3000);
   };
 
   const uploadFile = (file) => {
@@ -131,9 +127,8 @@ const Signin = () => {
     uploadTask.on(
       "state_changed",
       (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setImgPrecentage(Math.round(progress))
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setImgPrecentage(Math.round(progress));
         switch (snapshot.state) {
           case "paused":
             console.log("Upload is paused");
@@ -160,7 +155,7 @@ const Signin = () => {
     signInWithPopup(auth, provider)
       .then((result) =>
         axios
-          .post("/auth/google", {
+          .post(`${baseURL}/auth/google`, {
             name: result.user.displayName,
             email: result.user.email,
             img: result.user.photoURL,
@@ -175,17 +170,14 @@ const Signin = () => {
 
   useEffect(() => {
     image && uploadFile(image);
-  },[image])
+  }, [image]);
 
   return (
     <Container>
       <Wrapper className="signin_wrapper">
         <Title>Sign in</Title>
         {/* <SubTitle></SubTitle> */}
-        <Input
-          placeholder="Username"
-          onChange={(e) => setName(e.target.value)}
-        />
+        <Input placeholder="Username" onChange={(e) => setName(e.target.value)} />
         <Input
           placeholder="Password"
           type="password"
@@ -196,23 +188,18 @@ const Signin = () => {
           <Button onClick={signInWithGoogle}>Google Sign in</Button>
         </ButtonContainer>
         <SubTitle>or</SubTitle>
-        <Input
-          placeholder="Username"
-          onChange={(e) => setName(e.target.value)}
-        />
+        <Input placeholder="Username" onChange={(e) => setName(e.target.value)} />
         <Input placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
         <Input
           placeholder="Password"
           type="password"
           onChange={(e) => setPassword(e.target.value)}
         />
-        <Label>Profile image: {imgPrecentage? imgPrecentage + "%" : ""}</Label>
-        <ImageInput
-            type="file"
-            accept="image/*"
-            onChange={(e) => setImage(e.target.files[0])}
-          />
-        <Button onClick={handleSignup} disabled={!imageUrl}>Sign up</Button>
+        <Label>Profile image: {imgPrecentage ? imgPrecentage + "%" : ""}</Label>
+        <ImageInput type="file" accept="image/*" onChange={(e) => setImage(e.target.files[0])} />
+        <Button onClick={handleSignup} disabled={!imageUrl}>
+          Sign up
+        </Button>
       </Wrapper>
     </Container>
   );

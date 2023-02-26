@@ -3,8 +3,9 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
-import "./../styles/home.css"
+import "./../styles/home.css";
 import Card from "./../components/Card";
+import { baseURL } from "../config";
 
 const Container = styled.div`
   width: 100%;
@@ -19,7 +20,7 @@ const Search = () => {
 
   useEffect(() => {
     const fetchVideos = async () => {
-      const res = await axios.get(`/videos/search${query}`);
+      const res = await axios.get(`${baseURL}/videos/search${query}`);
       setVideos(res.data);
     };
     fetchVideos();

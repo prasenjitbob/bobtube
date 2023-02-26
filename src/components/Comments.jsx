@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useUser } from "../context/UserContext";
 import Comment from "./Comment";
-import ChannelImg from "./../assets/images/2.png"
+import ChannelImg from "./../assets/images/2.png";
+import { baseURL } from "../config";
 
 const Container = styled.div``;
 
@@ -28,32 +29,30 @@ const Input = styled.input`
   width: 100%;
 `;
 
-const Comments = ({videoId}) => {
-
-  const {user} = useUser();
-  const [ comments, setComments ] = useState([]);
+const Comments = ({ videoId }) => {
+  const { user } = useUser();
+  const [comments, setComments] = useState([]);
 
   useEffect(() => {
     const fetchComments = async () => {
-      try{
-        const res = await axios.get(`/comments/${videoId}`);
+      try {
+        const res = await axios.get(`${baseURL}/comments/${videoId}`);
         setComments(res.data);
+      } catch (err) {
+        console.log(err);
       }
-      catch (err) {
-        console.log(err)
-      }
-    }
+    };
     fetchComments();
-  },[videoId])
+  }, [videoId]);
 
   return (
     <Container>
       <NewComment>
-        <Avatar src={user?.img || ChannelImg} referrerPolicy="no-referrer"/>
+        <Avatar src={user?.img || ChannelImg} referrerPolicy="no-referrer" />
         <Input placeholder="Add a comment..." />
       </NewComment>
-      {comments?.map(comment => (
-        <Comment key={comment._id} comment={comment}/>
+      {comments?.map((comment) => (
+        <Comment key={comment._id} comment={comment} />
       ))}
     </Container>
   );

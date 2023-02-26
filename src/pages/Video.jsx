@@ -16,6 +16,7 @@ import { useUser } from "../context/UserContext";
 import Recommendation from "../components/Recommendation";
 import { toast } from "react-toastify";
 import "./../styles/video.css";
+import { baseURL } from "../config";
 
 const Container = styled.div`
   display: grid;
@@ -24,7 +25,7 @@ const Container = styled.div`
 `;
 
 const Content = styled.div`
-width: 100%
+  width: 100%;
 `;
 
 const VideoWrapper = styled.div``;
@@ -140,10 +141,8 @@ const Video = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const videoRes = await axios.get(`/videos/find/${id}`);
-        const channelRes = await axios.get(
-          `/users/find/${videoRes.data.userId}`
-        );
+        const videoRes = await axios.get(`${baseURL}/videos/find/${id}`);
+        const channelRes = await axios.get(`${baseURL}/users/find/${videoRes.data.userId}`);
         setVideo(videoRes.data);
         setLikeCount(videoRes.data.likes?.length);
         setChannel(channelRes.data);
@@ -158,8 +157,8 @@ const Video = () => {
   }, [id, user]);
   console.log(user);
   const handleLike = async () => {
-    if(!user) return toast.info("Sign in to like the video.");
-    await axios.put(`/users/like/${video._id}`);
+    if (!user) return toast.info("Sign in to like the video.");
+    await axios.put(`${baseURL}/users/like/${video._id}`);
     if (isLiked) return;
     setLikeCount(likeCount + 1);
     setIsLiked(true);
@@ -167,25 +166,25 @@ const Video = () => {
   };
 
   const handleDislike = async () => {
-    if(!user) return toast.info("Sign in to dislike the video.");
-    await axios.put(`/users/dislike/${video._id}`);
+    if (!user) return toast.info("Sign in to dislike the video.");
+    await axios.put(`${baseURL}/users/dislike/${video._id}`);
     if (isDisliked) return;
-    if(isLiked) setLikeCount(likeCount - 1);
+    if (isLiked) setLikeCount(likeCount - 1);
     setIsDisliked(true);
     setIsLiked(false);
   };
 
   const subscribe = async () => {
-    if(!user) return toast.info("Sign in to subscribe the channel.");
+    if (!user) return toast.info("Sign in to subscribe the channel.");
     if (!isSubscribed) {
-      await axios.put(`/users/sub/${channel._id}`);
+      await axios.put(`${baseURL}/users/sub/${channel._id}`);
       setIsSubscribed(!isSubscribed);
       setUser({
         ...user,
         subscribedUsers: [...user.subscribedUsers, channel._id],
       });
     } else {
-      await axios.put(`/users/unSub/${channel._id}`);
+      await axios.put(`${baseURL}/users/unSub/${channel._id}`);
       setIsSubscribed(!isSubscribed);
       const newSubscribedUsersArray = user?.subscribedUsers?.filter(
         (userId) => userId !== channel._id
@@ -201,14 +200,12 @@ const Video = () => {
     <Container className="video_container">
       <Content>
         <VideoWrapper>
-          <VideoFrame src={video.videoUrl} controls poster={video.imgUrl} autoPlay/>
+          <VideoFrame src={video.videoUrl} controls poster={video.imgUrl} autoPlay />
         </VideoWrapper>
         <Title>{video?.title}</Title>
         <Description>{video?.description}</Description>
         <Details className="video_details">
-          <Info>
-            {format(video?.createdAt)}
-          </Info>
+          <Info>{format(video?.createdAt)}</Info>
           <Buttons className="video_buttons">
             <Button onClick={handleLike}>
               {isLiked ? <ThumbUp /> : <ThumbUpOutlined />} {likeCount}
@@ -233,15 +230,15 @@ const Video = () => {
               <ChannelCounter>{channel.subscribers} subscribers</ChannelCounter>
             </ChannelDetail>
           </ChannelInfo>
-          {user?._id !== video.userId ? <Subscribe onClick={subscribe}>
-            {isSubscribed ? "SUBSCRIBED" : "SUBSCRIBE"}
-          </Subscribe> : null}
+          {user?._id !== video.userId ? (
+            <Subscribe onClick={subscribe}>{isSubscribed ? "SUBSCRIBED" : "SUBSCRIBE"}</Subscribe>
+          ) : null}
         </Channel>
         {/* <Hr /> */}
         <CommentsCount>122 Comments</CommentsCount>
-        <Comments videoId={video._id}/>
+        <Comments videoId={video._id} />
       </Content>
-      <Recommendation tags={video.tags} videoId={video._id}/>
+      <Recommendation tags={video.tags} videoId={video._id} />
     </Container>
   );
 };

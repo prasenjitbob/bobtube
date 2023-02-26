@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import app from "./../firebase";
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { baseURL } from "../config";
 
 const Container = styled.div`
   width: 100%;
@@ -128,8 +124,7 @@ const Upload = ({ setOpen }) => {
     uploadTask.on(
       "state_changed",
       (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         urlType === "imgUrl"
           ? setImgPrecentage(Math.round(progress))
           : setVideoPrecentage(Math.round(progress));
@@ -167,10 +162,10 @@ const Upload = ({ setOpen }) => {
 
   const handleUpload = async (e) => {
     e.preventDefault();
-    const res = await axios.post(`/videos`, { ...inputs, tags });
+    const res = await axios.post(`${baseURL}/videos`, { ...inputs, tags });
     setOpen(false);
-    if(res.status === 200){
-      toast.success("Video uploaded successfully")
+    if (res.status === 200) {
+      toast.success("Video uploaded successfully");
       setTimeout(() => navigate(`/video/${res.data._id}`), 2000);
     }
   };
@@ -184,43 +179,23 @@ const Upload = ({ setOpen }) => {
         {videoPrecentage > 0 ? (
           "Uploading: " + videoPrecentage + "%"
         ) : (
-          <Input
-            type="file"
-            accept="video/*"
-            onChange={(e) => setVideo(e.target.files[0])}
-          />
+          <Input type="file" accept="video/*" onChange={(e) => setVideo(e.target.files[0])} />
         )}
-        <Input
-          type="text"
-          placeholder="Title"
-          name="title"
-          onChange={handleChange}
-        />
+        <Input type="text" placeholder="Title" name="title" onChange={handleChange} />
         <Description
           placeholder="Description"
           rows={8}
           name="description"
           onChange={handleChange}
         />
-        <Input
-          type="text"
-          placeholder="Separate the tags with commas."
-          onChange={handleTags}
-        />
+        <Input type="text" placeholder="Separate the tags with commas." onChange={handleTags} />
         <Label>Image:</Label>
         {imgPrecentage > 0 ? (
           "Uploading: " + imgPrecentage + "%"
         ) : (
-          <Input
-            type="file"
-            accept="image/*"
-            onChange={(e) => setImage(e.target.files[0])}
-          />
+          <Input type="file" accept="image/*" onChange={(e) => setImage(e.target.files[0])} />
         )}
-        <Button
-          disabled={imgPrecentage !== 100 || videoPrecentage !== 100}
-          onClick={handleUpload}
-        >
+        <Button disabled={imgPrecentage !== 100 || videoPrecentage !== 100} onClick={handleUpload}>
           Upload
         </Button>
       </Wrapper>

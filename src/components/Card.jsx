@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { format } from "timeago.js";
 import axios from "axios";
 import "./../styles/card.css";
+import { baseURL } from "../config";
 
 const Container = styled.div`
   // width: ${(props) => props.type !== "sm" && "360px"};
@@ -74,7 +75,7 @@ const Card = ({ type, video }) => {
 
   useEffect(() => {
     const fetchChannel = async () => {
-      const res = await axios.get(`/users/find/${video.userId}`);
+      const res = await axios.get(`${baseURL}/users/find/${video.userId}`);
       setChannel(res.data);
     };
     fetchChannel();
@@ -83,12 +84,12 @@ const Card = ({ type, video }) => {
   return (
     <Link to={`/video/${video._id}`} style={{ textDecoration: "none" }}>
       <Container type={type}>
-        <Image src={video.imgUrl} type={type} alt="" className="card_img"/>
+        <Image src={video.imgUrl} type={type} alt="" className="card_img" />
         <Details type={type} className="card_details">
           <ChannelImage src={channel.img || ChannelImg} type={type} />
           <Text>
             <Title>{video.title}</Title>
-            <Description>{video.description.substr(0,50)}...</Description>
+            <Description>{video.description.substr(0, 50)}...</Description>
             {/* <ChannelName>{channel.name}</ChannelName> */}
             <Info>
               <ChannelName>{channel.name}:</ChannelName>&nbsp;

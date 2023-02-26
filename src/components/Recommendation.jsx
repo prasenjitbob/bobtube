@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { baseURL } from "../config";
 import Card from "./Card";
 
 const Container = styled.div`
@@ -12,13 +13,13 @@ const Recommendation = ({ tags, videoId }) => {
 
   useEffect(() => {
     const fetchVideos = async () => {
-      const res = await axios.get(`/videos/tags?tags=${tags}`);
+      const res = await axios.get(`${baseURL}/videos/tags?tags=${tags}`);
       const videosExcSelf = res.data.filter((video) => video._id !== videoId);
       setVideos(videosExcSelf);
     };
     fetchVideos();
   }, [tags, videoId]);
-  
+
   return (
     <Container>
       {videos?.map((video) => (
