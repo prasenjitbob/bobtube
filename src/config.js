@@ -1,1 +1,1 @@
-export const baseURL = "https://bobtube-server.onrender.com";
+export const baseURL = "https://bobtube-server.onrender.com/api";
