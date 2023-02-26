@@ -1,0 +1,11 @@
+@media (min-width: 600px) and (max-width: 1900px) {
+    .card_details {
+        height: 112px;
+    }
+}
+
+@media (min-width: 530px) and (max-width: 767px) {
+    .card_img {
+        height: 160px !important;
+    }
+}

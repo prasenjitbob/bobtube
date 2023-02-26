@@ -1,0 +1,18 @@
+@media (max-width: 767px) {
+    .video_container {
+        grid-template-columns: 1fr !important;
+    }
+    .video_details {
+        gap: 20px !important
+    }
+}
+
+@media (max-width: 599px) {
+    .video_buttons {
+        gap: 10px !important;
+    }
+    .video_buttons div{
+        font-size: 12px !important;
+        gap: 5px !important;
+    }
+}

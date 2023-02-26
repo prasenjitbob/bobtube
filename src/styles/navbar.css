@@ -1,0 +1,22 @@
+.menu_icon, .close_icon {
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+@media (min-width: 1025px) {
+    .menu_icon, .close_icon {
+        display: none !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .navbar_wrapper {
+        padding: 0 20px !important;
+    }  
+}
+
+@media (max-width: 599px) {
+    .user_container {
+        display: none !important;
+    }
+}

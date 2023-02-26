@@ -1,0 +1,6 @@
+@media (max-width: 1024px) {
+    .signin_wrapper {
+        right: 0 !important;
+        bottom: 0 !important;
+    }
+}

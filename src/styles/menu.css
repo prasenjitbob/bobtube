@@ -1,0 +1,29 @@
+.show_menu_container::-webkit-scrollbar {
+    display: none !important;
+}
+.menu_container::-webkit-scrollbar {
+    display: none !important;
+}
+
+/* .backdrop {
+    width: 100vh;
+    height: 100vh;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+} */
+
+@media (max-width: 1024px) {
+    .menu_container {
+        display: none;
+    }
+
+    .show_menu_container {
+        position: fixed !important;
+    }
+}
+
+@media (max-width: 599px) {
+    .show_menu_container {
+        width: -webkit-fill-available !important;
+    }
+}
